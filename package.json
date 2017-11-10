@@ -1,0 +1,54 @@
+{
+  "name": "term-schemes",
+  "version": "1.0.0",
+  "description": "Parse and normalize common terminal emulator color schemes",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "start": "npx jest --watch",
+    "build": "npx tsc",
+    "test": "npx jest"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "skipBabel": true
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
+    "testRegex": "src/(.*)\\.test\\.js$",
+    "transform": {
+      "^.+\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    }
+  },
+  "author": "Mario Nebl <hello@mario-nebl.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "globby": "^6.1.0",
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1",
+    "pkg-dir": "^2.0.0",
+    "prettier": "^1.8.2",
+    "ts-jest": "^21.2.1",
+    "tslint": "^5.8.0",
+    "tslint-config-prettier": "^1.6.0",
+    "typescript": "^2.6.1"
+  },
+  "dependencies": {
+    "@marionebl/is": "^0.5.1-0",
+    "@types/globby": "^6.1.0",
+    "@types/jest": "^21.1.5",
+    "@types/lodash": "^4.14.84",
+    "@types/node": "^8.0.50",
+    "aggregate-error": "^1.0.0",
+    "bplist-parser": "^0.1.1",
+    "lodash": "^4.17.4",
+    "plist": "^2.1.0"
+  }
+}
