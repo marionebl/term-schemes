@@ -30,7 +30,7 @@ interface TerminalData {
 
 export function terminal(input: any): TermScheme {
   if (!is.string(input) || is.emptyOrWhitespace(input)) {
-    throw new TypeError(`iterm2: input must be non-empty string`);
+    throw new TypeError(`terminal: input must be non-empty string`);
   }
 
   const raw = parse(input);

@@ -9,15 +9,15 @@ test("exports a function", () => {
 });
 
 test("throws for empty input", () => {
-  expect(() => terminal()).toThrow();
+  expect(() => terminal()).toThrow(/terminal: input must be non-empty string/);
 });
 
 test("throws for empty string", () => {
-  expect(() => terminal("")).toThrow();
+  expect(() => terminal("")).toThrow(/terminal: input must be non-empty string/);
 });
 
 test("throws for whitespace only input", () => {
-  expect(() => terminal(" ")).toThrow();
+  expect(() => terminal(" ")).toThrow(/terminal: input must be non-empty string/);
 });
 
 test("works for valid input", async () => {
