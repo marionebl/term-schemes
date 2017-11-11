@@ -167,6 +167,10 @@ function toColor(input: number): number {
 
 function getIterm2DataErrrors(data: any): TypeError[] {
   if (!is.plainObject(data)) {
+    if (is.array(data) && data.length === 0) {
+      return [new TypeError(`iterm2: input must be non-empty plist, received []`)];
+    }
+
     return [new TypeError(`expected type object, received ${is(data)}`)];
   }
 

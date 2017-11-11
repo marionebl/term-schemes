@@ -28,6 +28,13 @@
     }
   },
   "author": "Mario Nebl <hello@mario-nebl.de>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marionebl/term-schemes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marionebl/term-schemes/issues"
+  },
   "license": "MIT",
   "devDependencies": {
     "globby": "^6.1.0",

@@ -9,20 +9,20 @@ test("exports a function", () => {
 });
 
 test("throws for empty input", () => {
-  expect(() => iterm2()).toThrow();
+  expect(() => iterm2()).toThrow(/iterm2: input must be non-empty string/);
 });
 
 test("throws for empty string", () => {
-  expect(() => iterm2("")).toThrow();
+  expect(() => iterm2("")).toThrow(/iterm2: input must be non-empty string/);
 });
 
 test("throws for whitespace only input", () => {
-  expect(() => iterm2(" ")).toThrow();
+  expect(() => iterm2(" ")).toThrow(/iterm2: input must be non-empty string/);
 });
 
 test("throws for empty plist", async () => {
   const empty = await fixture("iterm2/empty.itermcolors");
-  expect(() => iterm2(empty)).toThrow();
+  expect(() => iterm2(empty)).toThrow(/iterm2: input must be non-empty plist, received \[\]/);
 });
 
 test("throws for incomplete input", async () => {
