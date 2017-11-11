@@ -35,6 +35,14 @@ export function terminal(input: any): TermScheme {
 
   const raw = parse(input);
 
+  if (!is.plainObject(raw)) {
+    if (is.array(raw) && raw.length === 0) {
+      throw new TypeError(`terminal: input must be non-empty p-list, received []`);
+    }
+
+    throw new TypeError(`expected type object, received ${is(raw)}`);
+  }
+
   return {
     0: toRGB(raw.ANSIBlackColor, "ANSIBlackColor"),
     1: toRGB(raw.ANSIRedColor, "ANSIRedColor"),
@@ -59,7 +67,7 @@ export function terminal(input: any): TermScheme {
   };
 }
 
-/**  */
+/** Convert a NSArchiver base64-encoded Buffer containing NSColor to TermSchemeColor  */
 function toRGB(archive: any, name: string): TermSchemeColor {
   if (is.undefined(archive)) {
     throw new TypeError(`Missing NSArchiver archive ${name}`);

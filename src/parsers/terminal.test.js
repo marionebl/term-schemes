@@ -20,6 +20,11 @@ test("throws for whitespace only input", () => {
   expect(() => terminal(" ")).toThrow(/terminal: input must be non-empty string/);
 });
 
+test("throws for empty plist", async () => {
+  const empty = await fixture("terminal/empty.terminal");
+  expect(() => terminal(empty)).toThrow(/terminal: input must be non-empty p-list/);
+});
+
 test("works for valid input", async () => {
   const oneDark = await fixture("terminal/Seti.terminal");
   expect(() => terminal(oneDark)).not.toThrow();
