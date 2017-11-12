@@ -1,6 +1,7 @@
 import is from "@marionebl/is";
 import { TermScheme, TermSchemeColor } from "./term-scheme";
 
+const AggregateError = require("aggregate-error");
 const { parse } = require("plist");
 const { parseBuffer } = require("bplist-parser");
 
@@ -70,7 +71,7 @@ export function terminal(input: any): TermScheme {
 /** Convert a NSArchiver base64-encoded Buffer containing NSColor to TermSchemeColor  */
 function toRGB(archive: any, name: string): TermSchemeColor {
   if (is.undefined(archive)) {
-    throw new TypeError(`Missing NSArchiver archive ${name}`);
+    throw new TypeError(`Missing ${name}`);
   }
 
   if (!is.buffer(archive)) {
@@ -79,38 +80,45 @@ function toRGB(archive: any, name: string): TermSchemeColor {
     );
   }
 
-  const result = parseBuffer(archive);
+  const [err, result] = parseBplist(archive);
+
+  if (err) {
+    throw new AggregateError([
+      new TypeError(`Parsing ${name} failed`),
+      err
+    ]);
+  }
 
   if (!Array.isArray(result)) {
-    throw new TypeError(`Unexpected NSArchiver archive type: ${is(result)}`);
+    throw new TypeError(`Unexpected archive type in ${name}: ${is(result)}`);
   }
 
   if (result.length === 0) {
-    throw new TypeError(`Unexpected zero length NSArchiver archive`);
+    throw new TypeError(`Unexpected zero length archive in ${name}`);
   }
 
   const [value] = result;
 
   if (!("$objects" in value)) {
-    throw new TypeError(`Missing $objects key in NSArchiver archive`);
+    throw new TypeError(`Missing $objects key in ${name}`);
   }
 
   const objects = value["$objects"];
 
   if (!Array.isArray(objects)) {
-    throw new TypeError(`Unexpected NSArchiver $objects type: ${is(result)}`);
+    throw new TypeError(`Unexpected $objects type of ${name}: ${is(result)}`);
   }
 
   if (objects.length < 1) {
     throw new TypeError(
-      `Unexpected length NSArchiver $objects length ${result.length}`
+      `Unexpected $objects length ${result.length} of ${name}`
     );
   }
 
   const color = objects[1];
 
   if (!("NSRGB" in color)) {
-    throw new TypeError(`Missing NSRGB key in NSArchiver color`);
+    throw new TypeError(`Missing NSRGB in color ${name}`);
   }
 
   return color.NSRGB.toString()
@@ -118,4 +126,12 @@ function toRGB(archive: any, name: string): TermSchemeColor {
     .split(" ")
     .map((item: string) => parseFloat(item))
     .map((num: number) => Math.round(num * 255));
+}
+
+function parseBplist(input: Buffer): [Error | null, any] {
+  try {
+    return [null, parseBuffer(input)];
+  } catch (err) {
+    return [err, null];
+  }
 }
