@@ -40,6 +40,10 @@ async function main() {
 
 Copyright Mario Nebl. term-schemes is released under the MIT license.
 
+## Related
+
+* Test fixtures sourced from [mbadolato/iTerm2-Color-Schemes](https://github.com/mbadolato/iTerm2-Color-Schemes)
+
 ## Development
 
 ```
