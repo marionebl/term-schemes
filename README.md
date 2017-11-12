@@ -31,9 +31,8 @@ async function main() {
 * [ ] Terminator `.config`
 * [ ] Konsole `.colorscheme`
 * [x] Terminal `.terminal`
-* [ ] PuTTY `.reg`
 * [ ] Remmina `.colors`
-* [ ] Termite ``
+* [ ] Termite ` `
 * [ ] Tilda `.itermcolors_config_0`
 * [ ] Xfce `.theme`
 
