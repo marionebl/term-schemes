@@ -1,5 +1,5 @@
 import is from "@marionebl/is";
-import {decode} from "ini";
+import { decode } from "ini";
 import { normalize } from "path";
 import { TermScheme, TermSchemeColor } from "./term-scheme";
 import { error } from "util";
