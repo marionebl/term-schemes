@@ -20,6 +20,31 @@ test("throws for whitespace only input", () => {
   expect(() => konsole(" ")).toThrow(/konsole: input must be non-empty string/);
 });
 
+test("throws for empty input", async () => {
+  const empty = await fixture("konsole/empty.colorscheme");
+  expect(() => konsole(empty)).toThrow(/konsole: input must be non-empty colorscheme/);
+});
+
+test("throws for incomplete input", async () => {
+  const incomplete = await fixture("konsole/incomplete.colorscheme");
+  expect(() => konsole(incomplete)).toThrow(/konsole: missing "Color0"/);
+});
+
+test("throws for malformed keys", async () => {
+  const incomplete = await fixture("konsole/malformed-keys.colorscheme");
+  expect(() => konsole(incomplete)).toThrow(/konsole: missing "Color" in "Background"/);
+});
+
+test("throws for malformed values", async () => {
+  const incomplete = await fixture("konsole/malformed-values.colorscheme");
+  expect(() => konsole(incomplete)).toThrow(/konsole: expected "Background" to be comma-separated rgb, received "InvalidValue"/);
+});
+
+test.only("throws for malformed range", async () => {
+  const incomplete = await fixture("konsole/malformed-range.colorscheme");
+  expect(() => konsole(incomplete)).toThrow(/konsole: expected "Background" to be comma-separated rgb, received "256,18,19"/);
+});
+
 test("returns expected result for Seti", async () => {
   const data = await fixture("konsole/Seti.colorscheme");
   expect(konsole(data)).toEqual({

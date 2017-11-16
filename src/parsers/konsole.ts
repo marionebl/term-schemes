@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import is from "@marionebl/is";
 import { decode } from "ini";
 import { TermScheme, TermSchemeColor } from "./term-scheme";
@@ -5,24 +6,24 @@ import { TermScheme, TermSchemeColor } from "./term-scheme";
 const AggregateError = require("aggregate-error");
 
 interface KonsoleScheme {
-  Color0: string;
-  Color0Intense: string;
-  Color1: string;
-  Color1Intense: string;
-  Color2: string;
-  Color2Intense: string;
-  Color3: string;
-  Color3Intense: string;
-  Color4: string;
-  Color4Intense: string;
-  Color5: string;
-  Color5Intense: string;
-  Color6: string;
-  Color6Intense: string;
-  Color7: string;
-  Color7Intense: string;
-  Background: string;
-  Foreground: string;
+  Color0: TermSchemeColor;
+  Color0Intense: TermSchemeColor;
+  Color1: TermSchemeColor;
+  Color1Intense: TermSchemeColor;
+  Color2: TermSchemeColor;
+  Color2Intense: TermSchemeColor;
+  Color3: TermSchemeColor;
+  Color3Intense: TermSchemeColor;
+  Color4: TermSchemeColor;
+  Color4Intense: TermSchemeColor;
+  Color5: TermSchemeColor;
+  Color5Intense: TermSchemeColor;
+  Color6: TermSchemeColor;
+  Color6Intense: TermSchemeColor;
+  Color7: TermSchemeColor;
+  Color7Intense: TermSchemeColor;
+  Background: TermSchemeColor;
+  Foreground: TermSchemeColor;
 }
 
 const KONSOLE_KEYS = [
@@ -57,30 +58,34 @@ export function konsole(input: any): TermScheme {
   }
 
   return {
-    1: toRgb(n.Color1),
-    0: toRgb(n.Color0),
-    2: toRgb(n.Color2),
-    3: toRgb(n.Color3),
-    4: toRgb(n.Color4),
-    5: toRgb(n.Color5),
-    6: toRgb(n.Color6),
-    7: toRgb(n.Color7),
-    8: toRgb(n.Color0Intense),
-    9: toRgb(n.Color1Intense),
-    10: toRgb(n.Color2Intense),
-    11: toRgb(n.Color3Intense),
-    12: toRgb(n.Color4Intense),
-    13: toRgb(n.Color5Intense),
-    14: toRgb(n.Color6Intense),
-    15: toRgb(n.Color7Intense),
-    bold: toRgb(n.Foreground),
-    cursor: toRgb(n.Foreground),
-    text: toRgb(n.Foreground),
-    background: toRgb(n.Background)
+    1: n.Color1,
+    0: n.Color0,
+    2: n.Color2,
+    3: n.Color3,
+    4: n.Color4,
+    5: n.Color5,
+    6: n.Color6,
+    7: n.Color7,
+    8: n.Color0Intense,
+    9: n.Color1Intense,
+    10: n.Color2Intense,
+    11: n.Color3Intense,
+    12: n.Color4Intense,
+    13: n.Color5Intense,
+    14: n.Color6Intense,
+    15: n.Color7Intense,
+    bold: n.Foreground,
+    cursor: n.Foreground,
+    text: n.Foreground,
+    background: n.Background
   };
 }
 
-function normalize(data: any): [Error | null, KonsoleScheme] {
+function normalize(data: any): [Error, null] | [null, KonsoleScheme] {
+  if (is.empty(data)) {
+    throw new TypeError(`konsole: input must be non-empty colorscheme`);
+  }
+
   const errors: Error[] = [];
 
   KONSOLE_KEYS
@@ -99,32 +104,60 @@ function normalize(data: any): [Error | null, KonsoleScheme] {
         return false;
       }
 
-      if (!(key in data)) {
-        errors.push(new TypeError(`konsole: missing "Color" in "${key}", received "${val}"`));
+      if (!('Color' in val)) {
+        errors.push(new TypeError(`konsole: missing "Color" in "${key}", received "${inspect(val)}"`));
+        return false;
       }
 
       return true;
+    })
+    .filter((key) => {
+      const val = data[key].Color;
+      const fragments = val.split(',');
+
+      if (fragments.length !== 3) {
+        errors.push(new TypeError(`konsole: expected "${key}" to be comma-separated rgb, received "${val}"`));
+        return false;
+      }
+
+      const nums = fragments.map((f: string) => Number(f));
+
+      if (nums.length !== 3) {
+        errors.push(new TypeError(`konsole: expected "${key}" to be comma-separated rgb, received "${val}"`));
+        return false;
+      }
+
+      const invalid = nums.filter((n: number) => !is.inRange(n, 255));
+
+      if (invalid.length > 0) {
+        errors.push(new TypeError(`konsole: expected "${key}" to be comma-separated rgb, received "${val}"`));
+        return false;
+      }
     });
 
+  if (errors.length > 0) {
+    return [new AggregateError(errors), null];
+  }
+
   return [null, {
-    Color0: data.Color0.Color,
-    Color0Intense: data.Color0Intense.Color,
-    Color1: data.Color1.Color,
-    Color1Intense: data.Color1Intense.Color,
-    Color2: data.Color2.Color,
-    Color2Intense: data.Color2Intense.Color,
-    Color3: data.Color3.Color,
-    Color3Intense: data.Color3Intense.Color,
-    Color4: data.Color4.Color,
-    Color4Intense: data.Color4Intense.Color,
-    Color5: data.Color5.Color,
-    Color5Intense: data.Color5Intense.Color,
-    Color6: data.Color6.Color,
-    Color6Intense: data.Color6Intense.Color,
-    Color7: data.Color7.Color,
-    Color7Intense: data.Color7Intense.Color,
-    Background: data.Background.Color,
-    Foreground: data.Foreground.Color
+    Color0: toRgb(data.Color0.Color),
+    Color0Intense: toRgb(data.Color0Intense.Color),
+    Color1: toRgb(data.Color1.Color),
+    Color1Intense: toRgb(data.Color1Intense.Color),
+    Color2: toRgb(data.Color2.Color),
+    Color2Intense: toRgb(data.Color2Intense.Color),
+    Color3: toRgb(data.Color3.Color),
+    Color3Intense: toRgb(data.Color3Intense.Color),
+    Color4: toRgb(data.Color4.Color),
+    Color4Intense: toRgb(data.Color4Intense.Color),
+    Color5: toRgb(data.Color5.Color),
+    Color5Intense: toRgb(data.Color5Intense.Color),
+    Color6: toRgb(data.Color6.Color),
+    Color6Intense: toRgb(data.Color6Intense.Color),
+    Color7: toRgb(data.Color7.Color),
+    Color7Intense: toRgb(data.Color7Intense.Color),
+    Background: toRgb(data.Background.Color),
+    Foreground: toRgb(data.Foreground.Color)
   }];
 }
 

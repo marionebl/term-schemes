@@ -29,7 +29,7 @@ async function main() {
 * [x] iTerm2 `.itermcolors`
 * [ ] XTerm `.xrdb`
 * [x] Terminator `.config`
-* [ ] Konsole `.colorscheme`
+* [x] Konsole `.colorscheme`
 * [x] Terminal `.terminal`
 * [ ] Remmina `.colors`
 * [ ] Termite ` `
