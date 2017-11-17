@@ -12,6 +12,7 @@ interface TerminatorScheme {
   background_color: string;
   cursor_color: string;
   foreground_color: string;
+  [colorName: string]: string;
 }
 
 interface NormalizedTerminatorScheme {
@@ -32,11 +33,6 @@ export function terminator(input: any): TermScheme {
   }
 
   const data = decode(input);
-
-  if (!validateData(data)) {
-    throw getDataErrors(data);
-  }
-
   const [err, normalized] = normalizeData(data);
 
   if (err) {
@@ -67,40 +63,34 @@ export function terminator(input: any): TermScheme {
   };
 }
 
-function getDataErrors(data: any): Error {
+function normalizeData(data: TerminatorScheme): [Error, null] | [null, NormalizedTerminatorScheme] {
   if (isEmpty(data)) {
-    throw new TypeError('terminator: config must be non-empty');
+    return [new TypeError('terminator: config must be non-empty'), null];
   }
 
   const errors: Error[] = [];
 
-  TERMINATOR_KEYS
-    .filter(key => {
-      const val = data[key];
-      if (is.undefined(val)) {
-        errors.push(new TypeError(`terminator: "${key}" missing from config`));
-        return false;
+  const faultyColors = TERMINATOR_KEYS
+    .map((key: string) => {
+      if (!(key in data)) {
+        return new TypeError(`terminator: "${key}" missing from config`);
       }
-      return true;
-    })
-    .filter(key => {
-      const val = data[key];
-      if (!is.string(val)) {
-        errors.push(new TypeError(`terminator: "${key}" must be string, received ${typeof val}`));
-        return false;
-      }
-      return true;
-    })
-    .filter(key => {
-      const val = data[key];
-      if (!val.match(HEX_MATCH)) {
-        errors.push(new TypeError(`terminator: "${key}" must be hex color, received "${val}"`));
-        return false;
-      }
-      return true;
-    });
 
-  if (is.undefined(data.palette)) {
+      const val = data[key];
+
+      if (!is.string(val)) {
+        return new TypeError(`terminator: "${key}" must be string, received ${typeof val}`);
+      }
+
+      if (!val.match(HEX_MATCH)) {
+        return new TypeError(`terminator: "${key}" must be hex color, received "${val}"`);
+      }
+    })
+    .filter(Boolean);
+
+  errors.push(...faultyColors);
+
+  if (!('palette' in data)) {
     errors.push(new TypeError(`terminator: "palette" missing from config`));
   }
 
@@ -108,34 +98,31 @@ function getDataErrors(data: any): Error {
     errors.push(new TypeError(`terminator: "palette" must be string, received "${typeof data.palette}"`));
   }
 
-  if (is.string(data.palette)) {
-    const colors = data.palette.split(":");
+  const fragments = (data.palette || '').split(':');
 
-    if (colors.length !== 16) {
-      errors.push(new TypeError(`terminator: ${PALETTE_EXPECTATION}, received "${data.palette}"`));
-    }
-
-    const paletteErrors = colors
-      .map((color: string, index: number) => {
-        if (!color.match(HEX_MATCH)) {
-          return new TypeError(`terminator: invalid palette item at index ${index}, expected hex color, received ${color}"`);
-        }
-      })
-      .filter(Boolean);
-
-    if (paletteErrors.length > 0) {
-      errors.push(new TypeError(`terminator: ${PALETTE_EXPECTATION}, received "${data.palette}"`));
-      errors.push(...paletteErrors);
-    }
+  if (fragments.length !== 16) {
+    errors.push(new TypeError(`terminator: ${PALETTE_EXPECTATION}, received "${data.palette}"`));
   }
 
-  return new AggregateError(errors);
-}
+  const paletteErrors = fragments
+    .map((color: string, index: number) => {
+      if (!color.match(HEX_MATCH)) {
+        return new TypeError(`terminator: invalid palette item at index ${index}, expected hex color, received ${color}"`);
+      }
+    })
+    .filter(Boolean);
 
-function normalizeData(data: TerminatorScheme): [Error | null, NormalizedTerminatorScheme] {
-  const palette = data.palette
-    .split(':')
-    .map(color => hexRgb(color));
+  if (paletteErrors.length > 0) {
+    errors.push(new TypeError(`terminator: ${PALETTE_EXPECTATION}, received "${data.palette}"`));
+    errors.push(...paletteErrors);
+  }
+
+  if (errors.length > 0) {
+    const err: Error = new AggregateError(errors);
+    return [err, null];
+  }
+
+  const palette = fragments.map(color => hexRgb(color));
 
   return [null, {
     palette,
@@ -143,55 +130,6 @@ function normalizeData(data: TerminatorScheme): [Error | null, NormalizedTermina
     cursor: hexRgb(data.cursor_color),
     text: hexRgb(data.foreground_color)
   }]
-}
-
-function validateData(data: any): data is TerminatorScheme {
-  if (isEmpty(data)) {
-    return false;
-  }
-
-  const colorsInvalid = TERMINATOR_KEYS
-    .some((key: string) => {
-      const val = data[key];
-      if (!is.string(val)) {
-        return true;
-      }
-      if (!val.match(HEX_MATCH)) {
-        return true;
-      }
-    });
-
-  if (colorsInvalid) {
-    return false;
-  }
-
-  if (is.undefined(data.palette)) {
-    return false;
-  }
-
-  if (!is.string(data.palette)) {
-    return false;
-  }
-
-  if (!validatePalette(data.palette)) {
-    return false;
-  }
-
-  return true;
-}
-
-function validatePalette(palette: string): boolean {
-  const colors = palette.split(':');
-
-  if (colors.length !== 16) {
-    return false;
-  }
-
-  if (colors.some(c => !is.string(c))) {
-    return false;
-  }
-
-  return !colors.some(c => Boolean(c.match(HEX_MATCH)));
 }
 
 function isEmpty(data: any): boolean {

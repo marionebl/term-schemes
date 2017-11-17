@@ -45,17 +45,17 @@ test("throws for input with incomplete palette", async () => {
   expect(() => terminator(empty)).toThrow(/terminator: "palette" must be list of 15 hex colors delimited by ":"/);
 });
 
-test.only("throws for input with malformed palette item", async () => {
+test("throws for input with malformed palette item", async () => {
   const empty = await fixture("terminator/malformed-palette-item.config");
   expect(() => terminator(empty)).toThrow(/terminator: "palette" must be list of 15 hex colors delimited by ":"/);
 });
 
 test("returns expected result for Seti", async () => {
-  const seti = await fixture("terminator/Seti.config");
-  expect(terminator(seti)).toEqual(seti);
+  const data = await fixture("terminator/Seti.config");
+  expect(terminator(data)).toEqual(seti);
 });
 
 test("returns expected result for Atom", async () => {
-  const seti = await fixture("terminator/Atom.config");
-  expect(terminator(seti)).toEqual(atom);
+  const data = await fixture("terminator/Atom.config");
+  expect(terminator(data)).toEqual(atom);
 });
