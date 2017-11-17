@@ -33,7 +33,7 @@ async function main() {
 * [x] Terminal `.terminal`
 * [x] Remmina `.colors`
 * [x] Termite ` `
-* [ ] Tilda `.itermcolors_config_0`
+* [x] Tilda `.config_0`
 * [ ] Xfce `.theme`
 
 ## License
