@@ -32,7 +32,7 @@ async function main() {
 * [x] Konsole `.colorscheme`
 * [x] Terminal `.terminal`
 * [x] Remmina `.colors`
-* [ ] Termite ` `
+* [x] Termite ` `
 * [ ] Tilda `.itermcolors_config_0`
 * [ ] Xfce `.theme`
 
