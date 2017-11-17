@@ -40,7 +40,7 @@ test("throws for malformed values", async () => {
   expect(() => konsole(incomplete)).toThrow(/konsole: expected "Background" to be comma-separated rgb, received "InvalidValue"/);
 });
 
-test.only("throws for malformed range", async () => {
+test("throws for malformed range", async () => {
   const incomplete = await fixture("konsole/malformed-range.colorscheme");
   expect(() => konsole(incomplete)).toThrow(/konsole: expected "Background" to be comma-separated rgb, received "256,18,19"/);
 });
