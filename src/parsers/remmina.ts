@@ -4,7 +4,7 @@ import { decode } from "ini";
 import { TermScheme, TermSchemeColor } from "./term-scheme";
 
 const AggregateError = require("aggregate-error");
-const hexRgb = require('hex-rgb');
+const hexRgb = require("hex-rgb");
 
 export type Parser = (raw: any) => TermScheme;
 export type Normalizer = (raw: string) => [Error, null] | [null, RemminaScheme];
@@ -63,7 +63,7 @@ const REMINNA_KEYS = [
   'color15'
 ];
 
-const EXACT_HEX_MATCH = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{6})/;
+const EXACT_HEX_MATCH = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/;
 const HEX_MATCH = /= (#[A-Fa-f0-9]{6}|[A-Fa-f0-9]{6})/g;
 
 export const remmina = createParser('remmina', {
