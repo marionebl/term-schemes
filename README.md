@@ -2,7 +2,7 @@
 
 # term-schemes
 
-* Supports **n** formats
+* Supports **9** formats
 * Normalizes to common structure
 * Works well with svg-term
 * TypeScript support
