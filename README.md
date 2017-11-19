@@ -27,14 +27,14 @@ async function main() {
 ## Supported formats
 
 * [x] iTerm2 `.itermcolors`
-* [ ] XTerm `.xrdb`
+* [ ] XTerm `.xrdb`, `Xresources`
 * [x] Terminator `.config`
 * [x] Konsole `.colorscheme`
 * [x] Terminal `.terminal`
 * [x] Remmina `.colors`
 * [x] Termite ` `
 * [x] Tilda `.config_0`
-* [ ] Xfce `.theme`
+* [x] Xfce `.theme`
 
 ## License
 
