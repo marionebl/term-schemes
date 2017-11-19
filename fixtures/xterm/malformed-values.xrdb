@@ -1,4 +1,4 @@
-#define Ansi_0_Color this is malformed
+#define Ansi_0_Color this_is_malformed
 #define Ansi_1_Color #fd5ff1
 #define Ansi_10_Color #94fa36
 #define Ansi_11_Color #f5ffa8

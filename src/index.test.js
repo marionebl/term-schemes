@@ -43,3 +43,8 @@ test('exports xfce method', () => {
   expect(termSchemes).toHaveProperty('xfce');
   expect(termSchemes.xfce).isFunction();
 });
+
+test('exports xterm method', () => {
+  expect(termSchemes).toHaveProperty('xterm');
+  expect(termSchemes.xterm).isFunction();
+});
