@@ -6,4 +6,5 @@ export { terminator } from "./parsers/terminator";
 export { termite } from "./parsers/termite";
 export { tilda } from "./parsers/tilda";
 export { xfce } from "./parsers/xfce";
+export { xresources } from "./parsers/xresources";
 export { xterm } from "./parsers/xterm";

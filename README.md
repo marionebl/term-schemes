@@ -27,7 +27,7 @@ async function main() {
 ## Supported formats
 
 * [x] iTerm2 `.itermcolors`
-* [ ] XTerm `.xrdb`, `Xresources`
+* [x] XTerm `.xrdb`, `Xresources`
 * [x] Terminator `.config`
 * [x] Konsole `.colorscheme`
 * [x] Terminal `.terminal`

@@ -6,7 +6,7 @@ import { TermScheme, TermSchemeColor } from "./term-scheme";
 const AggregateError = require("aggregate-error");
 const hexRgb = require("hex-rgb");
 
-interface XfceScheme {
+interface XTermScheme {
   Ansi_0_Color: TermSchemeColor;
   Ansi_1_Color: TermSchemeColor;
   Ansi_2_Color: TermSchemeColor;
@@ -119,7 +119,7 @@ function parse(raw: any): {[key: string]: string} {
   }, {});
 }
 
-function normalize(data: any): [Error, null] | [null, XfceScheme] {
+function normalize(data: any): [Error, null] | [null, XTermScheme] {
   if (is.empty(data)) {
     return [new TypeError(`xterm: input must be non-empty config`), null];
   }
