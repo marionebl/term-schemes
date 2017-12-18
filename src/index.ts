@@ -1,3 +1,17 @@
+export enum TermSchemes {
+  iterm2 = "iterm2",
+  konsole = "konsole",
+  remmina = "remmina",
+  terminal = "terminal",
+  terminator = "terminator",
+  termite = "termite",
+  tilda = "tilda",
+  xcfe = "xcfe",
+  xresources = "xresources",
+  xterm = "xterm"
+};
+
+export { TermScheme } from './parsers/term-scheme';
 export { iterm2 } from "./parsers/iterm2";
 export { konsole } from "./parsers/konsole";
 export { remmina } from "./parsers/remmina";
