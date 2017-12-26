@@ -4,6 +4,7 @@
   "description": "Parse and normalize common terminal emulator color schemes",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "files": ["lib"],
   "scripts": {
     "start": "npx jest --watch",
     "build": "npx tsc",
