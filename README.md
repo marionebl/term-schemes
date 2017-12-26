@@ -2,7 +2,7 @@
 
 # term-schemes
 
-* Supports **9** formats
+* Supports **10** formats
 * Normalizes to common structure
 * Works well with svg-term
 * TypeScript support
@@ -88,15 +88,16 @@ interface TermScheme {
 
 ## Supported formats
 
+* [x] Hyper `.js`
 * [x] iTerm2 `.itermcolors`
-* [x] XTerm `.xrdb`, `Xresources`
-* [x] Terminator `.config`
 * [x] Konsole `.colorscheme`
-* [x] Terminal `.terminal`
 * [x] Remmina `.colors`
+* [x] Terminal `.terminal`
+* [x] Terminator `.config`
 * [x] Termite ` `
 * [x] Tilda `.config_0`
 * [x] Xfce `.theme`
+* [x] XTerm `.xrdb`, `Xresources`
 
 ## License
 

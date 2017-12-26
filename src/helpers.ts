@@ -8,7 +8,7 @@ const readFile = promisify(fs.readFile);
 
 export async function fixture(id: string): Promise<string> {
   const fixtures = path.join(await pkgDir(__dirname), 'fixtures');
-  const fixturePath = path.join(fixtures, id);
+  const fixturePath = await resolveFixture(id);
 
   if (!fs.existsSync(fixturePath)) {
     const rel = path.relative(process.cwd(), fixturePath);
@@ -18,6 +18,10 @@ export async function fixture(id: string): Promise<string> {
   }
 
   return String(await readFile(fixturePath));
+}
+
+export async function resolveFixture(id: string): Promise<string> {
+  return path.join(path.join(await pkgDir(__dirname), 'fixtures'), id);
 }
 
 export const seti = {

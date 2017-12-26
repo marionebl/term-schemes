@@ -3,6 +3,11 @@ const termSchemes = require('.');
 
 expect.extend(matchers);
 
+test('exports hyper method', () => {
+  expect(termSchemes).toHaveProperty('hyper');
+  expect(termSchemes.hyper).isFunction();
+});
+
 test('exports iterm2 method', () => {
   expect(termSchemes).toHaveProperty('iterm2');
   expect(termSchemes.iterm2).isFunction();
@@ -17,7 +22,6 @@ test('exports remmina method', () => {
   expect(termSchemes).toHaveProperty('remmina');
   expect(termSchemes.remmina).isFunction();
 });
-
 
 test('exports terminal method', () => {
   expect(termSchemes).toHaveProperty('terminal');
