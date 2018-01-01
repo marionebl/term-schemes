@@ -141,7 +141,9 @@ function isIterm2Color(data: any): data is Iterm2Color {
     return false;
   }
 
-  const malformed = values(data).some(color => !is.inRange(color, 1));
+  const malformed = entries(data)
+    .filter(([name]) => includes(COLOR_KEYS, name))
+    .some(([, color]) => !is.inRange(color as number, 1));
 
   if (malformed) {
     return false;
@@ -210,7 +212,7 @@ function getIterm2ColorErrors(data: any, id: string): TypeError[] {
   );
 
   entries(data)
-    .filter(([name]) => !includes(COLOR_NAMES, name))
+    .filter(([name]) => includes(COLOR_KEYS, name))
     .forEach(([name, color]) => {
       if (!is.number(color)) {
         errors.push(

@@ -65,3 +65,29 @@ test("returns expected result for Atom", async () => {
   const data = await fixture("iterm2/Atom.itermcolors");
   expect(iterm2(data)).toEqual(atom);
 });
+
+test("returns expected result for serialized Seti", async () => {
+  const data = await fixture("iterm2/serialized.itermcolors");
+  expect(iterm2(data)).toEqual({
+    0: [65, 65, 65],
+    1: [207, 61, 65],
+    2: [158, 203, 77],
+    3: [231, 206, 97],
+    4: [81, 180, 221],
+    5: [158, 112, 194],
+    6: [158, 203, 77],
+    7: [241, 241, 241],
+    8: [65, 65, 65],
+    9: [207, 61, 65],
+    10: [158, 203, 77],
+    11: [231, 206, 97],
+    12: [81, 180, 221],
+    13: [158, 112, 194],
+    14: [158, 203, 77],
+    15: [255, 255, 255],
+    background: [21, 23, 24],
+    bold: [212, 215, 214],
+    cursor: [233, 200, 42],
+    text: [212, 215, 214]
+  });
+});
