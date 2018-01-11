@@ -2496,6 +2496,10 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
+terminal-default-colors@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/terminal-default-colors/-/terminal-default-colors-1.0.2.tgz#8b3bab68c1c1e741869ce11548a88ddcc5fbc1ba"
+
 test-exclude@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-4.1.1.tgz#4d84964b0966b0087ecc334a2ce002d3d9341e26"
