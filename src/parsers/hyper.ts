@@ -1,3 +1,5 @@
+import * as os from "os";
+import * as path from "path";
 import { inspect, error } from "util";
 import * as Color from "color";
 import is from "@marionebl/is";
@@ -5,6 +7,7 @@ import * as requireFromString from "require-from-string";
 import { TermScheme, TermSchemeColor } from "./term-scheme";
 
 const AggregateError = require("aggregate-error");
+const importFrom = require("import-from");
 
 type LegacyHyperColors = string[];
 
@@ -86,7 +89,7 @@ export function hyper(input: string, parserConfig: HyperParserConfig): TermSchem
     throw new TypeError(`hyper: parserConfig.filename must be string`);
   }
 
-  const data = requireFromString(input, parserConfig.filename);
+  const data = resolveHyperConfig(input, {filename: parserConfig.filename});
 
   const errs = getHyperConfigErrors(data);
 
@@ -197,4 +200,20 @@ function normalizeHyperConfig(data: HyperConfig): NormalizedHyperConfig {
     colors,
     foregroundColor: config.foregroundColor || DEFAULTS.foregroundColor
   };
+}
+
+function resolveHyperConfig(source: string, config: {filename: string}): any {
+  let base = requireFromString(source, config.filename);
+
+  if (Array.isArray(base.plugins)) {
+    base.plugins.forEach((p: string) => {
+      const hyperPrefix = path.join(os.homedir(), ".hyper_plugins");
+      const plugin = importFrom(hyperPrefix, p);
+      if (plugin.decorateConfig) {
+        base.config = plugin.decorateConfig(base.config);
+      }
+    });
+  }
+
+  return base;
 }
