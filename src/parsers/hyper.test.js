@@ -25,9 +25,10 @@ test("throws for empty config", async () => {
   expect(() => hyper(empty, {filename: 'placeholder'})).toThrow(/expected non-empty object, received {}/);
 });
 
-test("throws for missing top level keys", async () => {
-  const empty = await fixture("hyper/missing.js");
-  expect(() => hyper(empty, {filename: 'placeholder'})).toThrow(/missing "config.cursorColor"/);
+test("defaults missing top level keys", async () => {
+  const missing = await fixture("hyper/missing.js");
+  const actual = hyper(missing, {filename: 'placeholder'});
+  expect(actual.cursor).toEqual([217, 0, 189]);
 });
 
 test("throws for faulty extra color", async () => {
@@ -35,9 +36,10 @@ test("throws for faulty extra color", async () => {
   expect(() => hyper(empty, {filename: 'placeholder'})).toThrow(/"config.cursorColor" must be valid color, received "foo"/);
 });
 
-test("throws for missing color", async () => {
-  const empty = await fixture("hyper/missing-color.js");
-  expect(() => hyper(empty, {filename: 'placeholder'})).toThrow(/missing "config.colors.black"/);
+test("defaults for missing color", async () => {
+  const missingColor = await fixture("hyper/missing-color.js");
+  const actual = hyper(missingColor, {filename: 'placeholder'});
+  expect(actual[0]).toEqual([0, 0, 0]);
 });
 
 test("throws for faulty color", async () => {
