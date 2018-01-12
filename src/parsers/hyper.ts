@@ -90,7 +90,6 @@ export function hyper(input: string, parserConfig: HyperParserConfig): TermSchem
   }
 
   const data = resolveHyperConfig(input, {filename: parserConfig.filename});
-
   const errs = getHyperConfigErrors(data);
 
   if (errs.length > 0) {
@@ -119,7 +118,7 @@ export function hyper(input: string, parserConfig: HyperParserConfig): TermSchem
     14: get(colors.lightCyan),
     15: get(colors.lightWhite),
     background: get(backgroundColor),
-    bold: get(foregroundColor),
+    bold: get(colors.lightBlack),
     cursor: get(cursorColor),
     text: get(foregroundColor)
   };
