@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { inspect, error } from "util";
@@ -7,7 +8,7 @@ import * as requireFromString from "require-from-string";
 import { TermScheme, TermSchemeColor } from "./term-scheme";
 
 const AggregateError = require("aggregate-error");
-const importFrom = require("import-from");
+const resolveFrom = require("resolve-from");
 
 type LegacyHyperColors = string[];
 
@@ -202,12 +203,28 @@ function normalizeHyperConfig(data: HyperConfig): NormalizedHyperConfig {
 }
 
 function resolveHyperConfig(source: string, config: {filename: string}): any {
+  const PRELUDE = `
+    var _require = require;
+    require = function(id) {
+      switch (id) {
+        case 'electron':
+          return {};
+        default:
+          return _require(id);
+      }
+    };
+  `;
+
   let base = requireFromString(source, config.filename);
 
   if (Array.isArray(base.plugins)) {
     base.plugins.forEach((p: string) => {
       const hyperPrefix = path.join(os.homedir(), ".hyper_plugins");
-      const plugin = importFrom(hyperPrefix, p);
+      const pluginPath = resolveFrom(hyperPrefix, p);
+      const pluginSource = fs.readFileSync(pluginPath);
+
+      const plugin = requireFromString([PRELUDE, pluginSource].join('\n'), pluginPath);
+
       if (plugin.decorateConfig) {
         base.config = plugin.decorateConfig(base.config);
       }
